@@ -22,6 +22,7 @@ class LoginActivity : AppCompatActivity() {
 
         activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 result -> if(result.resultCode == Activity.RESULT_OK){
+            Snackbar.make(binding.root,"회원가입이 완료되었습니다.", Snackbar.LENGTH_LONG).show()
             id = result.data?.getStringExtra("id") ?: ""
             password = result.data?.getStringExtra("password") ?: ""
             mbti = result.data?.getStringExtra("mbti") ?: ""
@@ -33,7 +34,6 @@ class LoginActivity : AppCompatActivity() {
                 if(binding.etPassword.text.toString()!=password.toString()){
                     Snackbar.make(binding.root,"패스워드가 잘못 되었습니다.", Snackbar.LENGTH_LONG).show()
                 }else{
-                    Snackbar.make(binding.root,"로그인에 성공하셨습니다.", Snackbar.LENGTH_LONG ).show()
                     val intent = Intent(this, HomeActivity::class.java)
                     intent.putExtra("mbti",mbti)
                     startActivity(intent)

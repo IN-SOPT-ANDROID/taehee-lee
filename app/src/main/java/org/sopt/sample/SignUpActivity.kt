@@ -23,7 +23,7 @@ class SignUpActivity : AppCompatActivity() {
                     intent.putExtra("mbti",binding.etMbti.text.toString())
                     setResult(Activity.RESULT_OK, intent)
                     finish()
-                    Snackbar.make(binding.root,"회원가입이 완료되었습니다.", Snackbar.LENGTH_LONG).show()
+
                 }
                 else{
                     Snackbar.make(binding.root,"비밀번호가 잘못되었습니다.", Snackbar.LENGTH_LONG).show()
