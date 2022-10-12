@@ -1,11 +1,11 @@
-package org.sopt.sample
+package org.sopt.androidpractice
 
 import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
-import org.sopt.sample.databinding.ActivitySignUpBinding
+import org.sopt.androidpractice.databinding.ActivitySignUpBinding
 
 class SignUpActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignUpBinding

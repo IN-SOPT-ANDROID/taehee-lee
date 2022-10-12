@@ -1,4 +1,4 @@
-package org.sopt.sample
+package org.sopt.androidpractice
 
 import org.junit.Test
 

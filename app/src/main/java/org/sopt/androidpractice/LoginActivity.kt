@@ -1,4 +1,4 @@
-package org.sopt.sample
+package org.sopt.androidpractice
 
 import android.app.Activity
 import android.content.Intent
@@ -7,7 +7,8 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
-import org.sopt.sample.databinding.ActivityLoginBinding
+import org.sopt.androidpractice.databinding.ActivityLoginBinding
+import org.sopt.androidpractice.home.HomeActivity
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
