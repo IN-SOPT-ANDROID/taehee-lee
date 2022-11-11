@@ -10,6 +10,7 @@ import android.util.Log
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.snackbar.Snackbar
 import org.sopt.androidpractice.databinding.ActivitySignUpBinding
+import org.sopt.androidpractice.remote.RequestSignupDto
 import org.sopt.androidpractice.remote.ServicePool
 
 class SignUpActivity : AppCompatActivity() {
@@ -18,6 +19,7 @@ class SignUpActivity : AppCompatActivity() {
     private var mbtiExist : Boolean = false
     private val isButtonActive get() = idExist && passwordExist && mbtiExist
 
+    private var autoService = ServicePool.autoService
 
     private lateinit var binding: ActivitySignUpBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,11 +27,11 @@ class SignUpActivity : AppCompatActivity() {
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.etSignUpId.addTextChangedListener(object : TextWatcher{
+        binding.etSignUpEmail.addTextChangedListener(object : TextWatcher{
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                idExist = binding.etSignUpId.text.isNotBlank()
+                idExist = binding.etSignUpEmail.text.isNotBlank()
                 binding.btnSignUpComplete.isEnabled = isButtonActive
             }
 
@@ -47,11 +49,11 @@ class SignUpActivity : AppCompatActivity() {
             override fun afterTextChanged(p0: Editable?) {}
         })
 
-        binding.etMbti.addTextChangedListener(object : TextWatcher{
+        binding.etSignUpName.addTextChangedListener(object : TextWatcher{
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                mbtiExist = binding.etMbti.text.isNotBlank()
+                mbtiExist = binding.etSignUpName.text.isNotBlank()
                 binding.btnSignUpComplete.isEnabled = isButtonActive
             }
 
@@ -60,12 +62,19 @@ class SignUpActivity : AppCompatActivity() {
 
 
         binding.btnSignUpComplete.setOnClickListener {
-            if (binding.etSignUpId.text.length in 6..10){
+            if (binding.etSignUpEmail.text.length in 6..10){
                 if(binding.etSignUpPassword.text.length in 8..12){
+                    autoService.signUp(
+                        RequestSignupDto(
+                            binding.etSignUpEmail.text.toString(),
+                            binding.etSignUpPassword.text.toString(),
+                            binding.etSignUpName.text.toString()
+                        )
+                    )
                     val intent = Intent(this, LoginActivity::class.java)
-                    intent.putExtra("id", binding.etSignUpId.text.toString())
+                    intent.putExtra("email", binding.etSignUpEmail.text.toString())
                     intent.putExtra("password", binding.etSignUpPassword.text.toString())
-                    intent.putExtra("mbti",binding.etMbti.text.toString())
+                    intent.putExtra("name",binding.etSignUpName.text.toString())
                     setResult(Activity.RESULT_OK, intent)
                     finish()
                 }
