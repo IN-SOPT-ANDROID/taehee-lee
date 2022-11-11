@@ -6,14 +6,18 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.snackbar.Snackbar
 import org.sopt.androidpractice.databinding.ActivitySignUpBinding
+import org.sopt.androidpractice.remote.ServicePool
 
 class SignUpActivity : AppCompatActivity() {
     private var idExist : Boolean = false
     private var passwordExist : Boolean = false
     private var mbtiExist : Boolean = false
+    private val isButtonActive get() = idExist && passwordExist && mbtiExist
+
 
     private lateinit var binding: ActivitySignUpBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,15 +25,12 @@ class SignUpActivity : AppCompatActivity() {
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         binding.etSignUpId.addTextChangedListener(object : TextWatcher{
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 idExist = binding.etSignUpId.text.isNotBlank()
-                if (idExist && passwordExist && mbtiExist){
-                    binding.btnSignUpComplete.isEnabled = true
-                }
+                binding.btnSignUpComplete.isEnabled = isButtonActive
             }
 
             override fun afterTextChanged(p0: Editable?) {}
@@ -39,10 +40,8 @@ class SignUpActivity : AppCompatActivity() {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                passwordExist = binding.etSignUpId.text.isNotEmpty()
-                if (idExist && passwordExist && mbtiExist){
-                    binding.btnSignUpComplete.isEnabled = true
-                }
+                passwordExist = binding.etSignUpPassword.text.isNotBlank()
+                binding.btnSignUpComplete.isEnabled = isButtonActive
             }
 
             override fun afterTextChanged(p0: Editable?) {}
@@ -52,10 +51,8 @@ class SignUpActivity : AppCompatActivity() {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                mbtiExist = binding.etSignUpId.text.toString().isNotEmpty()
-                if (idExist && passwordExist && mbtiExist){
-                    binding.btnSignUpComplete.isEnabled = true
-                }
+                mbtiExist = binding.etMbti.text.isNotBlank()
+                binding.btnSignUpComplete.isEnabled = isButtonActive
             }
 
             override fun afterTextChanged(p0: Editable?) {}
@@ -82,12 +79,4 @@ class SignUpActivity : AppCompatActivity() {
 
     }
 
-    fun allFilled(){
-        val id = binding.etSignUpId.text.toString()
-        val password = binding.etSignUpPassword.text.toString()
-        val mbti = binding.etMbti.text.toString()
-        if (id.isNotEmpty() && password.isNotEmpty() && mbti.isNotEmpty()){
-            binding.btnSignUpComplete.isEnabled = true
-        }
-    }
 }
