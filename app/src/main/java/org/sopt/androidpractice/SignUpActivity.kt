@@ -4,15 +4,63 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import androidx.core.widget.addTextChangedListener
 import com.google.android.material.snackbar.Snackbar
 import org.sopt.androidpractice.databinding.ActivitySignUpBinding
 
 class SignUpActivity : AppCompatActivity() {
+    private var idExist : Boolean = false
+    private var passwordExist : Boolean = false
+    private var mbtiExist : Boolean = false
+
     private lateinit var binding: ActivitySignUpBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+        binding.etSignUpId.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                idExist = binding.etSignUpId.text.isNotBlank()
+                if (idExist && passwordExist && mbtiExist){
+                    binding.btnSignUpComplete.isEnabled = true
+                }
+            }
+
+            override fun afterTextChanged(p0: Editable?) {}
+        })
+
+        binding.etSignUpPassword.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                passwordExist = binding.etSignUpId.text.isNotEmpty()
+                if (idExist && passwordExist && mbtiExist){
+                    binding.btnSignUpComplete.isEnabled = true
+                }
+            }
+
+            override fun afterTextChanged(p0: Editable?) {}
+        })
+
+        binding.etMbti.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                mbtiExist = binding.etSignUpId.text.toString().isNotEmpty()
+                if (idExist && passwordExist && mbtiExist){
+                    binding.btnSignUpComplete.isEnabled = true
+                }
+            }
+
+            override fun afterTextChanged(p0: Editable?) {}
+        })
+
 
         binding.btnSignUpComplete.setOnClickListener {
             if (binding.etSignUpId.text.length in 6..10){
@@ -23,7 +71,6 @@ class SignUpActivity : AppCompatActivity() {
                     intent.putExtra("mbti",binding.etMbti.text.toString())
                     setResult(Activity.RESULT_OK, intent)
                     finish()
-
                 }
                 else{
                     Snackbar.make(binding.root,"비밀번호가 잘못되었습니다.", Snackbar.LENGTH_LONG).show()
@@ -33,5 +80,14 @@ class SignUpActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    fun allFilled(){
+        val id = binding.etSignUpId.text.toString()
+        val password = binding.etSignUpPassword.text.toString()
+        val mbti = binding.etMbti.text.toString()
+        if (id.isNotEmpty() && password.isNotEmpty() && mbti.isNotEmpty()){
+            binding.btnSignUpComplete.isEnabled = true
+        }
     }
 }
