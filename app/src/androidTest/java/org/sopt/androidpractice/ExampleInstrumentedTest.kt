@@ -1,4 +1,4 @@
-package org.sopt.sample
+package org.sopt.androidpractice
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
