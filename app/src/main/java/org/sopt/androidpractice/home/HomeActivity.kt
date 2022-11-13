@@ -2,7 +2,6 @@ package org.sopt.androidpractice.home
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ScrollView
 import androidx.fragment.app.Fragment
 import org.sopt.androidpractice.R
 import org.sopt.androidpractice.databinding.ActivityHomeBinding
@@ -11,6 +10,7 @@ import org.sopt.androidpractice.search.SearchFragment
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding : ActivityHomeBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
@@ -22,6 +22,7 @@ class HomeActivity : AppCompatActivity() {
                 .add(R.id.home_container, HomeFragment.newInstance())
                 .commit()
         }
+
         binding.bnvHome.setOnItemSelectedListener{
             when(it.itemId){
                 R.id.home_menu -> {
