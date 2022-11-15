@@ -2,6 +2,7 @@ package org.sopt.androidpractice.home
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import org.sopt.androidpractice.R
 import org.sopt.androidpractice.databinding.ActivityHomeBinding
@@ -16,12 +17,15 @@ class HomeActivity : AppCompatActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         val currentFragment = supportFragmentManager.findFragmentById(R.id.home_container)
         if (currentFragment == null) {
             supportFragmentManager.beginTransaction()
-                .add(R.id.home_container, HomeFragment.newInstance())
+                .add(R.id.home_container, HomeFragment())
                 .commit()
+
         }
+
 
         binding.bnvHome.setOnItemSelectedListener{
             when(it.itemId){

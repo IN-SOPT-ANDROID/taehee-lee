@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ResponseUserDto(
-    val data: List<Data>,
+    val data: List<User>,
     val page: Int,
     val per_page: Int,
     val support: Support,
@@ -12,7 +12,7 @@ data class ResponseUserDto(
     val total_pages: Int
 ) {
     @Serializable
-    data class Data(
+    data class User(
         val avatar: String,
         val email: String,
         val first_name: String,

@@ -16,22 +16,22 @@
         tools:src="@drawable/ic_github" />
 
     <TextView
-        android:id="@+id/txt_github_repo_name"
+        android:id="@+id/txt_first_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="40dp"
-        app:layout_constraintBottom_toTopOf="@id/txt_github_repo_author"
+        app:layout_constraintBottom_toTopOf="@id/txt_email"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/img_github"
-        tools:text="Repo Name" />
+        tools:text="TaeHee" />
 
     <TextView
-        android:id="@+id/txt_github_repo_author"
+        android:id="@+id/txt_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@+id/img_github"
-        app:layout_constraintEnd_toEndOf="@+id/txt_github_repo_name"
-        app:layout_constraintTop_toBottomOf="@+id/txt_github_repo_name"
-        tools:text="Taehee Lee" />
+        app:layout_constraintEnd_toEndOf="@+id/txt_first_name"
+        app:layout_constraintTop_toBottomOf="@+id/txt_first_name"
+        tools:text="lth@sopt.ac.kr" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
