@@ -1,9 +1,12 @@
 package org.sopt.androidpractice.home.data
 
-import androidx.annotation.DrawableRes
+import kotlinx.serialization.SerialName
 
 data class Repo(
-    @DrawableRes val image: Int,
+    @SerialName("avatar")
+    val image:String,
+    @SerialName("first-name")
     val name:String,
-    val author:String
+    @SerialName("email")
+    val email:String
 )
