@@ -1,7 +1,6 @@
 package org.sopt.androidpractice.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,7 +33,10 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initAdapter()
+    }
 
+    fun initAdapter(){
         userService.getUser().enqueue(object : Callback<ResponseUserDto> {
             override fun onResponse(
                 call: Call<ResponseUserDto>,
@@ -46,7 +48,6 @@ class HomeFragment : Fragment() {
                     val adapter = UserAdapter(requireContext())
                     binding.rvRepos.adapter = adapter
                     adapter.setRepoList(userViewModel.userList)
-                    Log.e("Response", "onResponse: ${userViewModel.userList}" )
 
                 } else if (response.code() == 404) {
                     Snackbar.make(binding.root, "404 error", Snackbar.LENGTH_LONG)
@@ -63,6 +64,7 @@ class HomeFragment : Fragment() {
 
         }
         )
+
     }
 
     override fun onDestroyView() {

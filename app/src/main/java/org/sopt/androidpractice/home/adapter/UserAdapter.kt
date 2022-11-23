@@ -37,7 +37,6 @@ class UserAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.ViewHold
 
     fun setRepoList(userList: List<ResponseUserDto.User>){
         this.userList = userList.toList()
-//        notifyItemChanged(0, userList.size)
         notifyDataSetChanged()
     }
 

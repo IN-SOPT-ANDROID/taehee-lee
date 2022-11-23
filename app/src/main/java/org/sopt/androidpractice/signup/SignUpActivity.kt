@@ -1,20 +1,14 @@
-package org.sopt.androidpractice
+package org.sopt.androidpractice.signup
 
-import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
+import org.sopt.androidpractice.LoginActivity
 import org.sopt.androidpractice.databinding.ActivitySignUpBinding
-import org.sopt.androidpractice.remote.RequestSignupDto
-import org.sopt.androidpractice.remote.ResponseSignupDto
-import org.sopt.androidpractice.remote.ServicePool
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class SignUpActivity : AppCompatActivity() {
     private var emailExist: Boolean = false
@@ -22,7 +16,7 @@ class SignUpActivity : AppCompatActivity() {
     private var nameExist: Boolean = false
     private val isButtonActive get() = emailExist && passwordExist && nameExist
 
-    private var signupService = ServicePool.signupService
+    private val viewModel by viewModels<SignUpViewModel>() //위임 공부해보기
 
     private lateinit var binding: ActivitySignUpBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,39 +57,20 @@ class SignUpActivity : AppCompatActivity() {
             override fun afterTextChanged(p0: Editable?) {}
         })
 
-
         binding.btnSignUpComplete.setOnClickListener {
-            signupService.signUp(
-                RequestSignupDto(
-                    binding.etSignUpEmail.text.toString(),
-                    binding.etSignUpPassword.text.toString(),
-                    binding.etSignUpName.text.toString()
-                )
-            ).enqueue(object : Callback<ResponseSignupDto> {
-                override fun onResponse(
-                    call: Call<ResponseSignupDto>,
-                    response: Response<ResponseSignupDto>
-                ) {
-                    if (response.isSuccessful) {
-                        val intent = Intent(this@SignUpActivity, LoginActivity::class.java)
-                        setResult(Activity.RESULT_OK, intent)
-                        finish()
-                    } else if (response.code() == 404) {
-                        Snackbar.make(binding.root, "404 error", Snackbar.LENGTH_LONG)
-                            .show()
-                    } else if (response.code() == 401) {
-                        Snackbar.make(binding.root, "401 error", Snackbar.LENGTH_LONG)
-                            .show()
-                    }
-                }
-
-                override fun onFailure(call: Call<ResponseSignupDto>, t: Throwable) {
-                    Snackbar.make(binding.root, "서버 통신 장애가 발생", Snackbar.LENGTH_LONG).show()
-                }
-
-            }
+            viewModel.signUp(
+                binding.etSignUpEmail.text.toString(),
+                binding.etSignUpPassword.text.toString(),
+                binding.etSignUpName.text.toString()
             )
+        }
 
+        viewModel.signUpResult.observe(this) {
+            startActivity(Intent(this, LoginActivity::class.java))
+        }
+
+        viewModel.errorMessage.observe(this) {
+            Snackbar.make(binding.root, "$it error", Snackbar.LENGTH_SHORT).show()
         }
 
     }

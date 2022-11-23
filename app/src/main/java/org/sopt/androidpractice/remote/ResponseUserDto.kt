@@ -19,6 +19,7 @@ data class ResponseUserDto(
         val id: Int,
         val last_name: String
     )
+
     @Serializable
     data class Support(
         val text: String,

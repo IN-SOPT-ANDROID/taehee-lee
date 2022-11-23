@@ -12,7 +12,7 @@ import org.sopt.androidpractice.home.HomeActivity
 import org.sopt.androidpractice.remote.RequestLoginDto
 import org.sopt.androidpractice.remote.ResponseLoginDto
 import org.sopt.androidpractice.remote.ServicePool
-import org.sopt.androidpractice.remote.UserServicePool
+import org.sopt.androidpractice.signup.SignUpActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
