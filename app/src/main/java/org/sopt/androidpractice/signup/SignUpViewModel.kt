@@ -12,13 +12,12 @@ import retrofit2.Response
 
 class SignUpViewModel : ViewModel() {
     private val _signUpResult = MutableLiveData<ResponseSignupDto>()
-
     val signUpResult: LiveData<ResponseSignupDto>
         get() = _signUpResult
 
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String>
-        get() = _errorMessage //왜 get()을 쓰는지 알아보기
+        get() = _errorMessage //왜 get()을 쓰는지 알아보기 - null값 걸르기 위해?
 
     fun signUp(email: String, password: String, name: String) {
         signupService.signUp(

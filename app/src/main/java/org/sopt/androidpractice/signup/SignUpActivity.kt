@@ -7,7 +7,7 @@ import android.text.TextWatcher
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
-import org.sopt.androidpractice.LoginActivity
+import org.sopt.androidpractice.login.LoginActivity
 import org.sopt.androidpractice.databinding.ActivitySignUpBinding
 
 class SignUpActivity : AppCompatActivity() {
@@ -24,6 +24,12 @@ class SignUpActivity : AppCompatActivity() {
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        btnActivate()
+        signUp()
+
+    }
+
+    private fun btnActivate() {
         binding.etSignUpEmail.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
@@ -34,7 +40,6 @@ class SignUpActivity : AppCompatActivity() {
 
             override fun afterTextChanged(p0: Editable?) {}
         })
-
         binding.etSignUpPassword.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
@@ -45,7 +50,6 @@ class SignUpActivity : AppCompatActivity() {
 
             override fun afterTextChanged(p0: Editable?) {}
         })
-
         binding.etSignUpName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
@@ -56,7 +60,9 @@ class SignUpActivity : AppCompatActivity() {
 
             override fun afterTextChanged(p0: Editable?) {}
         })
+    }
 
+    private fun signUp() {
         binding.btnSignUpComplete.setOnClickListener {
             viewModel.signUp(
                 binding.etSignUpEmail.text.toString(),
@@ -72,7 +78,6 @@ class SignUpActivity : AppCompatActivity() {
         viewModel.errorMessage.observe(this) {
             Snackbar.make(binding.root, "$it error", Snackbar.LENGTH_SHORT).show()
         }
-
     }
 
 }
