@@ -2,6 +2,7 @@ package org.sopt.androidpractice.signup
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import org.sopt.androidpractice.remote.RequestSignupDto
 import org.sopt.androidpractice.remote.ResponseSignupDto
@@ -9,6 +10,7 @@ import org.sopt.androidpractice.remote.ServicePool.signupService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.regex.Pattern
 
 class SignUpViewModel : ViewModel() {
     private val _signUpResult = MutableLiveData<ResponseSignupDto>()
@@ -19,9 +21,17 @@ class SignUpViewModel : ViewModel() {
     val errorMessage: LiveData<String>
         get() = _errorMessage //왜 get()을 쓰는지 알아보기 - null값 걸르기 위해?
 
-    fun signUp(email: String, password: String, name: String) {
+    val idText: MutableLiveData<String> = MutableLiveData("")
+    val isIdSuit: LiveData<Boolean> = Transformations.map(idText) { idCondition(it) }
+
+    val pwText: MutableLiveData<String> = MutableLiveData("")
+    val isPwSuit: LiveData<Boolean> = Transformations.map(pwText) { pwCondition(it) }
+
+    val nameText: MutableLiveData<String> = MutableLiveData("")
+
+    fun signUp(id: String, password: String, name: String) {
         signupService.signUp(
-            RequestSignupDto(email, password, name)
+            RequestSignupDto(id, password, name)
         ).enqueue(object : Callback<ResponseSignupDto> {
             override fun onResponse(
                 call: Call<ResponseSignupDto>,
@@ -42,6 +52,25 @@ class SignUpViewModel : ViewModel() {
         )
     }
 
+    private fun idCondition(id: String):Boolean{
+        if (id == ""){
+            return true
+        }
+        val idPattern = """^(?=.*[0-9])(?=.*[a-zA-Z]){6,10}$"""
+        val pattern = Pattern.compile(idPattern)
+        val matcher = pattern.matcher(id)
+        return matcher.matches()
+    }
+
+    private fun pwCondition(password: String):Boolean{
+        if (password == ""){
+            return true
+        }
+        val pwPattern = """^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[$@$!%*#?&]){6,12}$"""//"^[A-Za-z[0-9]$@$!%*#?&.]{6,12}$"
+        val pattern = Pattern.compile(pwPattern)
+        val matcher = pattern.matcher(password)
+        return matcher.matches()
+    }
 
 
 }

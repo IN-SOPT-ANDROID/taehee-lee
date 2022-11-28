@@ -36,7 +36,7 @@ class HomeFragment : Fragment() {
         initAdapter()
     }
 
-    fun initAdapter(){
+    private fun initAdapter(){
         userService.getUser().enqueue(object : Callback<ResponseUserDto> {
             override fun onResponse(
                 call: Call<ResponseUserDto>,

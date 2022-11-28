@@ -2,20 +2,14 @@ package org.sopt.androidpractice.signup
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import com.google.android.material.snackbar.Snackbar
-import org.sopt.androidpractice.login.LoginActivity
 import org.sopt.androidpractice.databinding.ActivitySignUpBinding
+import org.sopt.androidpractice.login.LoginActivity
 
 class SignUpActivity : AppCompatActivity() {
-    private var emailExist: Boolean = false
-    private var passwordExist: Boolean = false
-    private var nameExist: Boolean = false
-    private val isButtonActive get() = emailExist && passwordExist && nameExist
-
     private val viewModel by viewModels<SignUpViewModel>() //위임 공부해보기
 
     private lateinit var binding: ActivitySignUpBinding
@@ -24,48 +18,35 @@ class SignUpActivity : AppCompatActivity() {
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        btnActivate()
+        binding.etSignUpId.setText(viewModel.idText.value)
+        binding.etSignUpPassword.setText(viewModel.pwText.value)
+        binding.etSignUpName.setText(viewModel.nameText.value)
+
+        btnActive()
         signUp()
 
     }
 
-    private fun btnActivate() {
-        binding.etSignUpEmail.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                emailExist = binding.etSignUpEmail.text.isNotBlank()
-                binding.btnSignUpComplete.isEnabled = isButtonActive
-            }
-
-            override fun afterTextChanged(p0: Editable?) {}
-        })
-        binding.etSignUpPassword.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                passwordExist = binding.etSignUpPassword.text.isNotBlank()
-                binding.btnSignUpComplete.isEnabled = isButtonActive
-            }
-
-            override fun afterTextChanged(p0: Editable?) {}
-        })
-        binding.etSignUpName.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                nameExist = binding.etSignUpName.text.isNotBlank()
-                binding.btnSignUpComplete.isEnabled = isButtonActive
-            }
-
-            override fun afterTextChanged(p0: Editable?) {}
-        })
+    private fun checkAllEditText() {
+        binding.btnSignUpComplete.isEnabled =
+                binding.etSignUpId.text.toString().isNotBlank() &&
+                binding.etSignUpPassword.text.toString().isNotBlank() &&
+                binding.etSignUpName.text.toString().isNotBlank() &&
+                viewModel.isIdSuit.value == true && viewModel.isPwSuit.value == true
     }
+
+    private fun btnActive() {
+        viewModel.idText.observe(this){checkAllEditText()}
+        viewModel.pwText.observe(this){checkAllEditText()}
+        viewModel.nameText.observe(this){checkAllEditText()}
+    }
+
 
     private fun signUp() {
         binding.btnSignUpComplete.setOnClickListener {
             viewModel.signUp(
-                binding.etSignUpEmail.text.toString(),
+                binding.etSignUpId.text.toString(),
                 binding.etSignUpPassword.text.toString(),
                 binding.etSignUpName.text.toString()
             )
