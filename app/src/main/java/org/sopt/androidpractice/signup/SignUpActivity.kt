@@ -2,9 +2,9 @@ package org.sopt.androidpractice.signup
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.addTextChangedListener
 import com.google.android.material.snackbar.Snackbar
 import org.sopt.androidpractice.databinding.ActivitySignUpBinding
 import org.sopt.androidpractice.login.LoginActivity
@@ -17,31 +17,31 @@ class SignUpActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.vm = viewModel // 태희야!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        binding.lifecycleOwner = this
 
-        binding.etSignUpId.setText(viewModel.idText.value)
-        binding.etSignUpPassword.setText(viewModel.pwText.value)
-        binding.etSignUpName.setText(viewModel.nameText.value)
-
-        btnActive()
+        observeSignUpFormat()
         signUp()
 
     }
 
+    private fun observeSignUpFormat() {
+        viewModel.isIdSuit.observe(this) {
+            Log.e("ddd", it.toString() )
+            setButtonState()
+        }
 
-    private fun checkAllEditText() {
+        viewModel.isPwSuit.observe(this) {
+            setButtonState()
+        }
+    }
+    // 사실 이 로직은 viewModel로 빼주는게 좋답니다 ㅎ ㅎ
+    private fun setButtonState() {
         binding.btnSignUpComplete.isEnabled =
-                binding.etSignUpId.text.toString().isNotBlank() &&
-                binding.etSignUpPassword.text.toString().isNotBlank() &&
-                binding.etSignUpName.text.toString().isNotBlank() &&
-                viewModel.isIdSuit.value == true && viewModel.isPwSuit.value == true
+            viewModel.nameText.value!!.isNotBlank() &&
+                    viewModel.isIdSuit.value == true &&
+                    viewModel.isPwSuit.value == true
     }
-
-    private fun btnActive() {
-        viewModel.idText.observe(this){checkAllEditText()}
-        viewModel.pwText.observe(this){checkAllEditText()}
-        viewModel.nameText.observe(this){checkAllEditText()}
-    }
-
 
     private fun signUp() {
         binding.btnSignUpComplete.setOnClickListener {
