@@ -22,10 +22,10 @@ class SignUpViewModel : ViewModel() {
         get() = _errorMessage //왜 get()을 쓰는지 알아보기 - null값 걸르기 위해?
 
     val idText: MutableLiveData<String> = MutableLiveData("")
-    val isIdSuit: LiveData<Boolean> = Transformations.map(idText) { idCondition(it) }
+    val isIdSuit: LiveData<Boolean> = Transformations.map(idText) { isValidIdFormat(it) }
 
     val pwText: MutableLiveData<String> = MutableLiveData("")
-    val isPwSuit: LiveData<Boolean> = Transformations.map(pwText) { pwCondition(it) }
+    val isPwSuit: LiveData<Boolean> = Transformations.map(pwText) { isValidPwFormat(it) }
 
     val nameText: MutableLiveData<String> = MutableLiveData("")
 
@@ -43,7 +43,6 @@ class SignUpViewModel : ViewModel() {
                     _errorMessage.value = response.message()
                 }
             }
-
             override fun onFailure(call: Call<ResponseSignupDto>, t: Throwable) {
                 _errorMessage.value = t.message
             }
@@ -52,25 +51,27 @@ class SignUpViewModel : ViewModel() {
         )
     }
 
-    private fun idCondition(id: String):Boolean{
-        if (id == ""){
-            return true
+    private fun isValidIdFormat(id: String): Boolean {
+        if (id.isBlank()) {
+            return false
         }
-        val idPattern = """^(?=.*[0-9])(?=.*[a-zA-Z]){6,10}$"""
-        val pattern = Pattern.compile(idPattern)
+        val pattern = Pattern.compile(ID_PATTERN)
         val matcher = pattern.matcher(id)
         return matcher.matches()
     }
 
-    private fun pwCondition(password: String):Boolean{
-        if (password == ""){
-            return true
+    private fun isValidPwFormat(password: String): Boolean {
+        if (password.isBlank()) {
+            return false
         }
-        val pwPattern = """^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[$@$!%*#?&]){6,12}$"""//"^[A-Za-z[0-9]$@$!%*#?&.]{6,12}$"
-        val pattern = Pattern.compile(pwPattern)
+        val pattern = Pattern.compile(PW_PATTERN)
         val matcher = pattern.matcher(password)
         return matcher.matches()
     }
 
+    companion object {
+        const val PW_PATTERN = "^(?=.*[A-Za-z])(?=.*[0-9])[A-Za-z[0-9]]{6,10}$"
+        const val ID_PATTERN = "^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[$@$!%*#?&.])[A-Za-z[0-9]$@$!%*#?&.]{6,12}$"
+    }
 
 }
