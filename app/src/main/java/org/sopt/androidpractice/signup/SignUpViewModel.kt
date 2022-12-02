@@ -28,6 +28,7 @@ class SignUpViewModel : ViewModel() {
     val isPwSuit: LiveData<Boolean> = Transformations.map(pwText) { isValidPwFormat(it) }
 
     val nameText: MutableLiveData<String> = MutableLiveData("")
+    val isNameSuit: LiveData<Boolean> = Transformations.map(nameText) { isValidNameFormat(it) }
 
     fun signUp(id: String, password: String, name: String) {
         signupService.signUp(
@@ -43,6 +44,7 @@ class SignUpViewModel : ViewModel() {
                     _errorMessage.value = response.message()
                 }
             }
+
             override fun onFailure(call: Call<ResponseSignupDto>, t: Throwable) {
                 _errorMessage.value = t.message
             }
@@ -52,8 +54,8 @@ class SignUpViewModel : ViewModel() {
     }
 
     private fun isValidIdFormat(id: String): Boolean {
-        if (id.isBlank()) {
-            return false
+        if (id == "") {
+            return true
         }
         val pattern = Pattern.compile(ID_PATTERN)
         val matcher = pattern.matcher(id)
@@ -61,17 +63,31 @@ class SignUpViewModel : ViewModel() {
     }
 
     private fun isValidPwFormat(password: String): Boolean {
-        if (password.isBlank()) {
-            return false
+        if (password == "") {
+            return true
         }
         val pattern = Pattern.compile(PW_PATTERN)
         val matcher = pattern.matcher(password)
         return matcher.matches()
     }
 
-    companion object {
-        const val PW_PATTERN = "^(?=.*[A-Za-z])(?=.*[0-9])[A-Za-z[0-9]]{6,10}$"
-        const val ID_PATTERN = "^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[$@$!%*#?&.])[A-Za-z[0-9]$@$!%*#?&.]{6,12}$"
+    private fun isValidNameFormat(name:String):Boolean{
+        return name == ""
     }
 
+    companion object {
+        const val ID_PATTERN = """^(?=.*[a-zA-Z])(?=.*\d).{6,10}$"""
+        const val PW_PATTERN = """^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%^&*()?]).{6,12}$"""
+    }
+
+
+    fun setButtonState(): Boolean {
+        return (isIdSuit.value == true && isPwSuit.value == true && isNameSuit.value == true &&
+                idText.toString().isNotEmpty() && pwText.toString().isNotEmpty()
+                && nameText.toString().isNotEmpty())
+//        binding.btnSignUpComplete.isEnabled =
+//            viewModel.nameText.value!!.isNotBlank() &&
+//                    viewModel.isIdSuit.value == true &&
+//                    viewModel.isPwSuit.value == true
+    }
 }
