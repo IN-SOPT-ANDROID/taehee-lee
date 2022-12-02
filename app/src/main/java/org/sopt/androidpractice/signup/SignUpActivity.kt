@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import com.google.android.material.snackbar.Snackbar
 import org.sopt.androidpractice.databinding.ActivitySignUpBinding
 import org.sopt.androidpractice.login.LoginActivity
@@ -52,9 +53,6 @@ class SignUpActivity : AppCompatActivity() {
                 binding.etSignUpId.text.toString(),
                 binding.etSignUpPassword.text.toString(),
                 binding.etSignUpName.text.toString()
-//                viewModel.idText.value.toString(),
-//                viewModel.pwText.value.toString(),
-//                viewModel.nameText.value.toString()
             )
         }
 
