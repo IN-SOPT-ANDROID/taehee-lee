@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.sync.Mutex
 import org.sopt.androidpractice.remote.RequestSignupDto
 import org.sopt.androidpractice.remote.ResponseSignupDto
 import org.sopt.androidpractice.remote.ServicePool.signupService

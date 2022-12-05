@@ -2,9 +2,13 @@ package org.sopt.androidpractice.signup
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputLayout
+import org.sopt.androidpractice.R
 import org.sopt.androidpractice.databinding.ActivitySignUpBinding
 import org.sopt.androidpractice.login.LoginActivity
 
