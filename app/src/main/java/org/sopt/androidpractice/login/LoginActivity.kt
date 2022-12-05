@@ -1,10 +1,11 @@
-package org.sopt.androidpractice
+package org.sopt.androidpractice.login
 
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import org.sopt.androidpractice.databinding.ActivityLoginBinding
@@ -19,7 +20,7 @@ import retrofit2.Response
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
-    private var loginService = ServicePool.loginService
+    private val viewModel by viewModels<LoginViewModel>()
 
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,35 +36,18 @@ class LoginActivity : AppCompatActivity() {
             }
 
         binding.btnLogin.setOnClickListener {
-            loginService.login(
-                RequestLoginDto(
-                    binding.etId.text.toString(),
-                    binding.etPassword.text.toString()
-                )
-            ).enqueue(object : Callback<ResponseLoginDto> {
-                override fun onResponse(
-                    call: Call<ResponseLoginDto>,
-                    response: Response<ResponseLoginDto>
-                ) {
-                    if (response.isSuccessful) {
-                        val intent = Intent(this@LoginActivity, HomeActivity::class.java)
-                        startActivity(intent)
-                        finish()
-                    } else if (response.code() == 404) {
-                        Snackbar.make(binding.root, "404 error", Snackbar.LENGTH_LONG)
-                            .show()
-                    } else if (response.code() == 401) {
-                        Snackbar.make(binding.root, "401 error", Snackbar.LENGTH_LONG)
-                            .show()
-                    }
-                }
-
-                override fun onFailure(call: Call<ResponseLoginDto>, t: Throwable) {
-                    Snackbar.make(binding.root, "서버 통신 장애가 발생", Snackbar.LENGTH_LONG).show()
-                }
-            }
+            viewModel.login(
+                binding.etId.text.toString(),
+                binding.etPassword.text.toString()
             )
+        }
 
+        viewModel.loginResult.observe(this) {
+            startActivity(Intent(this,HomeActivity::class.java))
+        }
+
+        viewModel.errorMessage.observe(this) {
+            Snackbar.make(binding.root, "$it error", Snackbar.LENGTH_SHORT).show()
         }
 
         binding.btnSignUp.setOnClickListener {

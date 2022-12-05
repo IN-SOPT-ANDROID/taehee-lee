@@ -2,27 +2,41 @@ package org.sopt.androidpractice.signup
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.sync.Mutex
 import org.sopt.androidpractice.remote.RequestSignupDto
 import org.sopt.androidpractice.remote.ResponseSignupDto
 import org.sopt.androidpractice.remote.ServicePool.signupService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.regex.Pattern
 
 class SignUpViewModel : ViewModel() {
     private val _signUpResult = MutableLiveData<ResponseSignupDto>()
-
     val signUpResult: LiveData<ResponseSignupDto>
         get() = _signUpResult
 
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String>
-        get() = _errorMessage //왜 get()을 쓰는지 알아보기
+        get() = _errorMessage //왜 get()을 쓰는지 알아보기 - null값 걸르기 위해?
 
-    fun signUp(email: String, password: String, name: String) {
+    val idText: MutableLiveData<String> = MutableLiveData("")
+    val isIdSuit: LiveData<Boolean> = Transformations.map(idText) { isValidIdFormat(it) }
+
+    val pwText: MutableLiveData<String> = MutableLiveData("")
+    val isPwSuit: LiveData<Boolean> = Transformations.map(pwText) { isValidPwFormat(it) }
+
+    val nameText: MutableLiveData<String> = MutableLiveData("")
+    val isNameSuit: LiveData<Boolean> = Transformations.map(nameText) { isValidNameFormat(it) }
+
+    private val _isButtonActive = MutableLiveData(false)
+    val isButtonActive get() = _isButtonActive
+
+    fun signUp(id: String, password: String, name: String) {
         signupService.signUp(
-            RequestSignupDto(email, password, name)
+            RequestSignupDto(id, password, name)
         ).enqueue(object : Callback<ResponseSignupDto> {
             override fun onResponse(
                 call: Call<ResponseSignupDto>,
@@ -43,6 +57,31 @@ class SignUpViewModel : ViewModel() {
         )
     }
 
+    private fun isValidIdFormat(id: String): Boolean {
+        if (id == "") return true
+        val pattern = Pattern.compile(ID_PATTERN)
+        val matcher = pattern.matcher(id)
+        return matcher.matches()
+    }
 
+    private fun isValidPwFormat(password: String): Boolean {
+        if (password == "") return true
+        val pattern = Pattern.compile(PW_PATTERN)
+        val matcher = pattern.matcher(password)
+        return matcher.matches()
+    }
 
+    private fun isValidNameFormat(name: String) = name == "" || " " !in name
+
+    fun setButtonState() {
+        _isButtonActive.value =
+            (isIdSuit.value == true && isPwSuit.value == true && isNameSuit.value == true &&
+                    idText.value!!.isNotBlank() && pwText.value!!.isNotBlank()
+                    && nameText.value!!.isNotBlank())
+    }
+
+    companion object {
+        const val ID_PATTERN = """^(?=.*[a-zA-Z])(?=.*\d).{6,10}$"""
+        const val PW_PATTERN = """^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%^&*()?]).{6,12}$"""
+    }
 }
