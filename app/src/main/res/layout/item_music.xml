@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+
+<!--    <data>-->
+<!--        <variable-->
+<!--            name="music"-->
+<!--            type="org.sopt.androidpractice.music.PlayListActivity" />-->
+<!--    </data>-->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="16dp"
+        android:paddingHorizontal="6dp"
+        >
+
+        <ImageView
+            android:id="@+id/music"
+            android:layout_width="100dp"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_diary"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/music_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="30dp"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/music"
+            app:layout_constraintTop_toTopOf="@id/music"
+            tools:text="Diary" />
+
+
+        <TextView
+            android:id="@+id/singer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="@+id/music_title"
+            app:layout_constraintTop_toBottomOf="@+id/music_title"
+            tools:text="Nowin" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
